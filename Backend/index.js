@@ -47,7 +47,7 @@ app.post("/api/auth/register", async (req, res) => {
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
-  if (!user || !(await bcrypt.compare(password, user.password)))
+  if (!user || !(await bcrypt.compare(password, user.password)));
     return res.status(401).json({ message: "Invalid credentials" });
   const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
   res.json({ token });
@@ -73,7 +73,7 @@ app.post(
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // Saving on Dababse
+    // Save db
     const image = new Image({
       userId: req.user._id,
       imagePath: req.file.path,
@@ -86,8 +86,8 @@ app.post(
       console.log("Image saved to DB:", savedImage);
       res.json({ image: savedImage });
     } catch (error) {
-      console.error("Error saving image to DB:", error);
-      res.status(500).json({ message: "Error saving image to database" });
+      console.error("Error image to DB:", error);
+      res.status(500).json({ message: "Error to database" });
     }
   }
 );
@@ -100,7 +100,7 @@ app.post("/api/save-boundaries/:imageId", authenticate, async (req, res) => {
       return res.status(404).json({ message: "Image not found" });
 
     if (!req.body.boundaries) {
-      return res.status(400).json({ message: "No boundaries provided" });
+      return res.status(400).json({ message: "No boundaries give" });
     }
 
     
@@ -110,7 +110,7 @@ app.post("/api/save-boundaries/:imageId", authenticate, async (req, res) => {
     res.json({ message: "Boundaries saved successfully", image });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error saving boundaries" });
+    res.status(500).json({ message: "Error saving boundary" });
   }
 });
 

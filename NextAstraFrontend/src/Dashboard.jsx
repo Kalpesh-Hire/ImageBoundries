@@ -15,7 +15,7 @@ function Dashboard() {
   const [rectangles, setRectangles] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
-  const transformerRef = useRef();
+  const transformRef = useRef();
   const layerRef = useRef();
 
   const handleUpload = async () => {
@@ -84,27 +84,27 @@ function Dashboard() {
     }
   };
 
-  // Save boundaries to backend
-  const handleSaveBoundaries = async () => {
+  // Save boundary to backend
+  const handleSaveBoundary = async () => {
     try {
       if (rectangles.length === 0) {
-        alert("No boundaries to save.");
+        alert("No boundary to save.");
         return;
       }
   
       await axios.post(
-        `http://localhost:5000/api/save-boundaries/${imageId}`,
-        { boundaries: rectangles },
+        `http://localhost:5000/api/save-boundary/${imageId}`,
+        { boundary: rectangles },
         {
           headers: {
             'Authorization': localStorage.getItem('token')
           }
         }
       );
-      alert("Boundaries saved successfully!");
+      alert("Boundary saved successfully!");
     } catch (err) {
-      console.error("Saving boundaries failed:", err);
-      alert("Failed to save boundaries.");
+      console.error("Saving boundary failed:", err);
+      alert("Failed to save boundary.");
     }
   };
   
@@ -113,11 +113,11 @@ function Dashboard() {
 
   // Apply transformer to selected rect
   useEffect(() => {
-    if (transformerRef.current && selectedId) {
+    if (transformRef.current && selectedId) {
       const selectedNode = layerRef.current.findOne(`#${selectedId}`);
       if (selectedNode) {
-        transformerRef.current.nodes([selectedNode]);
-        transformerRef.current.getLayer().batchDraw();
+        transformRef.current.nodes([selectedNode]);
+        transformRef.current.getLayer().batchDraw();
       }
     }
   }, [selectedId]);
@@ -167,7 +167,7 @@ function Dashboard() {
           Delete Selected
         </button>
         <button 
-          onClick={handleSaveBoundaries} 
+          onClick={handleSaveBoundary} 
           disabled={rectangles.length === 0} 
           className="px-6 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 disabled:opacity-50"
         >
@@ -197,7 +197,7 @@ function Dashboard() {
                   onDragEnd={(e) => handleTransformEnd(e, rect)}
                 />
               ))}
-              <Transformer ref={transformerRef} />
+              <Transformer ref={transformRef} />
             </Layer>
           </Stage>
         )}
